@@ -38,7 +38,8 @@ RATING_MAX = 5
 # the number of search results to display per page
 DOC_LIMIT = 3
 
-SAMPLE_DATA_BOOKS = 'sample_data_books.csv'
+#SAMPLE_DATA_BOOKS = 'sample_data_books.csv'
+SAMPLE_DATA_BOOKS = 'products.csv'
 SAMPLE_DATA_TVS = 'sample_data_tvs.csv'
 DEMO_UPDATE_BOOKS_DATA = 'sample_data_books_update.csv'
 

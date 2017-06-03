@@ -37,7 +37,9 @@ from google.appengine.api import users
 from google.appengine.ext.deferred import defer
 from google.appengine.ext import ndb
 from google.appengine.api import search
-
+import cloudstorage as gcs
+#import lib.cloudstorage as gcs
+#from google.appengine.ext import cloudstorage as gcs
 
 def reinitAll(sample_data=True):
   """
@@ -65,13 +67,19 @@ def reinitAll(sample_data=True):
     # The following are hardwired to the format of the sample data files
     # for the two example product types ('books' and 'hd televisions')-- see
     # categories.py
-    datafile = os.path.join('data', config.SAMPLE_DATA_BOOKS)
+    datafile = gcs.open("/catalog-pkb/products.csv")
     # books
+    #reader = csv.DictReader(
+    #    open(datafile, 'r'),
+    #    ['pid', 'name', 'category', 'price',
+    #     'publisher', 'title', 'pages', 'author',
+    #     'description', 'isbn'])
+    # products
     reader = csv.DictReader(
-        open(datafile, 'r'),
-        ['pid', 'name', 'category', 'price',
-         'publisher', 'title', 'pages', 'author',
-         'description', 'isbn'])
+        iter(datafile.readline, ''),
+        ['pid','name', 'category', 'price', 'upc', 
+         'shipping', 'description', 'manufacturer', 'model',
+         'url', 'image', 'createdAt', 'updatedAt'])
     importData(reader)
     datafile = os.path.join('data', config.SAMPLE_DATA_TVS)
     # tvs

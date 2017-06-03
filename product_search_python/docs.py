@@ -158,6 +158,7 @@ class Product(BaseDocumentManager):
   DESCRIPTION = 'description'
   CATEGORY = 'category'
   PRODUCT_NAME = 'name'
+  PRODUCT_NAME_NGRAM = 'name_ngram'
   PRICE = 'price'
   AVG_RATING = 'ar' #average rating
   UPDATED = 'modified'
@@ -308,7 +309,7 @@ class Product(BaseDocumentManager):
     # provided by the FTS API.
     try:
       sq = search.Query(
-          query_string=query_string.strip())
+          query_string='"{0}"'.format(query_string))  #quote the query string
       search_results = cls.getIndex().search(sq)
     except search.Error:
       logging.exception('An error occurred on search.')
@@ -353,11 +354,15 @@ class Product(BaseDocumentManager):
     Products. The various categories (as defined in the file 'categories.py'),
     may add additional specialized fields; these will be appended to this
     core list. (see _buildProductFields)."""
+
+    edgengrams = cls._find_edgengram(name, 3)
+
     fields = [search.TextField(name=cls.PID, value=pid),
               # The 'updated' field is always set to the current date.
               search.DateField(name=cls.UPDATED,
                   value=datetime.datetime.now().date()),
               search.TextField(name=cls.PRODUCT_NAME, value=name),
+              search.TextField(name=cls.PRODUCT_NAME_NGRAM, value=edgengrams),
               # strip the markup from the description value, which can
               # potentially come from user input.  We do this so that
               # we don't need to sanitize the description in the
@@ -376,6 +381,40 @@ class Product(BaseDocumentManager):
               search.NumberField(name=cls.PRICE, value=price)
              ]
     return fields
+
+
+  @classmethod
+  def _find_edgengram(cls, str_phrase, int_min_length = 3) :
+
+        arr_tokens = []
+        # Clean-up unwanted characters (assume english for now)
+        str_phrase = re.sub('[^A-z0-9 -]', '',str_phrase)
+
+        #print str_phrase
+        #print  "\n"
+
+        arr_words = str_phrase.split()
+
+        #print arr_words
+        #print  "\n"
+
+        arr_tokens = arr_tokens + arr_words
+        #print arr_tokens
+        #print  "\n"
+        for str_word in arr_words :
+            int_letters = len(str_word)
+            arr_ngrams = [];
+            for int_subs in range(int_min_length, int_letters - 1) :
+                arr_ngrams.append(str_word[0:int_subs])
+
+            arr_tokens = arr_tokens + arr_ngrams
+            #print arr_tokens
+            #print  "\n"
+
+        #print "final"
+        #print arr_tokens
+        #print  "\n"
+        return ' '.join(arr_tokens)
 
   @classmethod
   def _buildProductFields(cls, pid=None, category=None, name=None,
@@ -423,6 +462,7 @@ class Product(BaseDocumentManager):
       logging.warn(
           'product field information not found for category name %s',
           params['category_name'])
+    
     return fields
 
   @classmethod

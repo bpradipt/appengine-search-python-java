@@ -1,5 +1,3 @@
-application: your-app-id
-version: one
 runtime: python27
 threadsafe: true
 api_version: 1

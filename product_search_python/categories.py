@@ -22,8 +22,14 @@ from google.appengine.api import search
 
 televisions = {'name': 'hd televisions', 'children': []}
 books = {'name': 'books', 'children': []}
+hardgood = {'name': 'HardGood', 'children': []}
+game = {'name': 'Game', 'children': []}
+movie = {'name': 'Movie', 'children': []}
+music = {'name': 'Music', 'children': []}
+software = {'name': 'Software', 'children': []}
+blacktie = {'name': 'BlackTie', 'children': []}
 
-ctree =  {'name': 'root', 'children': [books, televisions]}
+ctree =  {'name': 'root', 'children': [books, televisions, hardgood, game, movie, music, software, blacktie]}
 
 # [The core fields that all products share are: product id, name, description,
 # category, category name, and price]
@@ -36,5 +42,47 @@ product_dict =  {'hd televisions': {'size': search.NumberField,
                            'pages': search.NumberField,
                            'author': search.TextField,
                            'title': search.TextField,
-                           'isbn': search.TextField}
+                           'isbn': search.TextField},
+                 'HardGood': {'model': search.TextField,
+                           'upc': search.TextField,
+                           'manufacturer': search.TextField,
+                           'createdAt': search.TextField,
+                           'createdAt': search.TextField,
+                           'image': search.HtmlField,
+                           'url': search.HtmlField},
+                 'Game': {'model': search.TextField,
+                           'upc': search.TextField,
+                           'manufacturer': search.TextField,
+                           'createdAt': search.TextField,
+                           'createdAt': search.TextField,
+                           'image': search.HtmlField,
+                           'url': search.HtmlField},
+                 'Movie': {'model': search.TextField,
+                           'upc': search.TextField,
+                           'manufacturer': search.TextField,
+                           'createdAt': search.TextField,
+                           'createdAt': search.TextField,
+                           'image': search.HtmlField,
+                           'url': search.HtmlField},
+                 'Music': {'model': search.TextField,
+                           'upc': search.TextField,
+                           'manufacturer': search.TextField,
+                           'createdAt': search.TextField,
+                           'createdAt': search.TextField,
+                           'image': search.HtmlField,
+                           'url': search.HtmlField},
+                 'Software': {'model': search.TextField,
+                           'upc': search.TextField,
+                           'manufacturer': search.TextField,
+                           'createdAt': search.TextField,
+                           'createdAt': search.TextField,
+                           'image': search.HtmlField,
+                           'url': search.HtmlField},
+                 'BlackTie': {'model': search.TextField,
+                           'upc': search.TextField,
+                           'manufacturer': search.TextField,
+                           'createdAt': search.TextField,
+                           'createdAt': search.TextField,
+                           'image': search.HtmlField,
+                           'url': search.HtmlField}
                 }

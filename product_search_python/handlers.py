@@ -26,6 +26,7 @@ import config
 import docs
 import models
 import utils
+import json
 
 from google.appengine.api import search
 from google.appengine.api import users
@@ -362,19 +363,20 @@ class ProductSearchHandler(BaseHandler):
   def _buildQuery(self, query, sortq, sort_dict, doc_limit, offsetval):
     """Build and return a search query object."""
 
+    query='"{0}"'.format(query)  #quote the query string
+
     # computed and returned fields examples.  Their use is not required
     # for the application to function correctly.
     computed_expr = search.FieldExpression(name='adjusted_price',
         expression='price * 1.08')
     returned_fields = [docs.Product.PID, docs.Product.DESCRIPTION,
                 docs.Product.CATEGORY, docs.Product.AVG_RATING,
-                docs.Product.PRICE, docs.Product.PRODUCT_NAME]
-
+                docs.Product.PRICE, docs.Product.PRODUCT_NAME, docs.Product.PRODUCT_NAME_NGRAM]
     if sortq == 'relevance':
       # If sorting on 'relevance', use the Match scorer.
       sortopts = search.SortOptions(match_scorer=search.MatchScorer())
       search_query = search.Query(
-          query_string=query.strip(),
+          query_string=query.strip(), 
           options=search.QueryOptions(
               limit=doc_limit,
               offset=offsetval,
@@ -515,7 +517,8 @@ class StoreLocationHandler(BaseHandler):
             direction=search.SortExpression.ASCENDING, default_value=0)
       sortopts = search.SortOptions(expressions=[sortexpr])
       search_query = search.Query(
-          query_string=query.strip(),
+          #query_string=query.strip(),
+          query_string='"{0}"'.format(query),
           options=search.QueryOptions(
               sort_options=sortopts,
               ))
@@ -535,3 +538,25 @@ class StoreLocationHandler(BaseHandler):
       response_obj2.append(resp)
     logging.info("resp: %s", response_obj2)
     self.render_json(response_obj2)
+
+class AutoCompleteHandler(BaseHandler):
+    def get(self):
+          query = (self.request.GET['term']) 
+	  search_query = search.Query(
+                query_string='name_ngram:' + query.strip(),
+                options=search.QueryOptions(
+ 		    returned_fields='name',
+              ))               
+
+          search_results = docs.Product.getIndex().search(search_query)
+	  resp_obj = []
+          for record in search_results:
+               print record
+  	       pdoc = docs.Product(record)
+               print pdoc.getFieldVal(pdoc.PRODUCT_NAME) 
+               #resp = {'name': pdoc.getFieldVal(pdoc.PRODUCT_NAME) }
+               resp = pdoc.getFieldVal(pdoc.PRODUCT_NAME)
+	       resp_obj.append(resp)	
+	  print resp_obj
+          self.render_json_get(resp_obj)   	
+

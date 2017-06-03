@@ -23,6 +23,12 @@ A user does not need to be logged in to search the products, or to add reviews.
 A user must be logged in **as an admin of the app to add or modify product
 data**. The sidebar admin links are not displayed for non-admin users.
 
+The demo app has been extended to support autocomplete. 
+Sample dataset is from Bestbuy and stored in cloud storage. 
+Currently the file name is hard coded (catalog-pkb/products.csv) in admin_handlers.py. 
+Ensure you change it before running it in your setup
+A sample products.json is present under /data folder. That can be used as well
+
 ## Configuration
 
 Before you deploy the application, edit `app.yaml` to specify your own app id and version.

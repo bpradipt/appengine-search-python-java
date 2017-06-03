@@ -24,10 +24,12 @@ import webapp2
 application = webapp2.WSGIApplication(
     [('/', IndexHandler),
      ('/psearch', ProductSearchHandler),
+     #('/psearch', AutoCompleteHandler),
      ('/product', ShowProductHandler),
      ('/reviews', ShowReviewsHandler),
      ('/create_review', CreateReviewHandler),
-     ('/get_store_locations', StoreLocationHandler)
+     ('/get_store_locations', StoreLocationHandler),
+     ('/autocomplete', AutoCompleteHandler)
     ],
     debug=True)
 

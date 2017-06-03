@@ -59,7 +59,6 @@
       <td>
 
        <input type="text" id="query" name="query" size="80" value="{{base_pquery}}" />
-
       </td>
 
       <td>
@@ -86,6 +85,23 @@
 
     </form>
 
+
+    <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var data = "/autocomplete";
+            $("#query").autocomplete({
+		source : data,
+		messages: {
+        		noResults: '',
+		        results: function() {}
+                },    
+		minLength: 3
+        });
+    });
+    </script>
 
 
     {% if search_response %}

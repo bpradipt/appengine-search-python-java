@@ -53,6 +53,8 @@ class BaseHandler(webapp2.RequestHandler):
   def render_json(self, response):
     self.response.write("%s(%s);" % (self.request.GET['callback'],
                                      json.dumps(response)))
+  def render_json_get(self, response):
+    self.response.write(json.dumps(response))
 
   def getLoginLink(self):
     """Generate login or logout link and text, depending upon the logged-in
